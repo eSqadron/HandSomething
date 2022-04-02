@@ -4,9 +4,9 @@ import socket
 
 WIDTH, HEIGHT = 1280, 720
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address_port = ('127.0.0.1', 5052)
-
+client.connect(server_address_port)
 
 if __name__ == '__main__':
     cam = cv2.VideoCapture(0)
@@ -25,7 +25,7 @@ if __name__ == '__main__':
                 for lm in lm_list:
                     data.extend([lm[0], HEIGHT - lm[1], lm[2]])
 
-                sock.sendto(str.encode(str(data)), server_address_port)
+                client.send(str.encode(str(data)))
 
 
         cv2.imshow("Image", img)
