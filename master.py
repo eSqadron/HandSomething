@@ -43,6 +43,7 @@ if __name__ == '__main__':
         if hands:
             for hand in hands:
                 lm_list = hand['lmList']
+                print(lm_list)
 
                 thumb_finger = lm_list[1:4 + 1]
                 index_finger = lm_list[5:8 + 1]
@@ -76,7 +77,7 @@ if __name__ == '__main__':
                     if v_mod < 0:
                         v_mod = 0
 
-                    print(v, v_mod)
+                    #print(v, v_mod)
 
                     fingers_ang.append(v_mod)
 
