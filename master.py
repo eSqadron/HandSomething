@@ -4,9 +4,10 @@ import cv2
 from cvzone.HandTrackingModule import HandDetector
 import socket
 import serial
-#### test
-arduino = True
+
+arduino = False
 Rpi = False
+arduino2 = False
 Unity = False
 
 if arduino:
@@ -14,12 +15,15 @@ if arduino:
 if Rpi:
     ser_RPi = serial.Serial('/dev/ttyUSB0')  # open serial port
 
+if arduino2:
+    ser_arduino2 = serial.Serial('/dev/ttyUSB0')  # open serial port
+
 
 WIDTH, HEIGHT = 1280, 720
 
 if Unity:
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address_port = ('172.20.15.55', 5052)
+    server_address_port = ('172.20.15.244', 5052)
     client.connect(server_address_port)
 
 if __name__ == '__main__':
@@ -74,15 +78,35 @@ if __name__ == '__main__':
                 if fingers_ang[1] > 0.8 and fingers_ang[2] < 0.2 and fingers_ang[3] < 0.2 and fingers_ang[4] > 0.8:
                     print("rock")
 
+                if arduino2:
+                    if fingers_ang[0] < 0.6:
+                        str_send = None
+                        if fingers_ang[1] < 0.5 and fingers_ang[2] > 0.7 and fingers_ang[3] > 0.7:
+                            str_send = f"LED R {int(fingers_ang[4]*100)}"
+                        elif fingers_ang[1] > 0.7 and fingers_ang[2] < 0.5 and fingers_ang[3] > 0.7:
+                            str_send = f"LED G {int(fingers_ang[4]*100)}"
+                        elif fingers_ang[1] > 0.7 and fingers_ang[2] > 0.7 and fingers_ang[3] < 0.5:
+                            str_send = f"LED B {int(fingers_ang[4]*100)}"
+
+                        if str_send is not None:
+                            str_send_bin = str.encode(str_send)
+                            print(str_send_bin)
+                            ser_arduino2.write(str_send_bin)
+                            for i in range(len(str_send) + 2):
+                                print(ser_arduino2.read())
+
+
                 #print(fingers_ang)
 
                 angs_normalized = [int(ang*140) for ang in fingers_ang]
 
                 if arduino:
-                    str_send = str.encode(str(angs_normalized).replace(' ', '').replace('[', '').replace(']', ''))
-                    print(str_send)
-                    ser_arduino.write(str_send)
-
+                    str_send = str(angs_normalized).replace(' ', '').replace('[', '').replace(']', '')
+                    str_send_bin = str.encode(str_send)
+                    print(str_send_bin)
+                    ser_arduino.write(str_send_bin)
+                    for i in range(len(str_send)+2*5-4):
+                        print(ser_arduino.read())
 
                 data = []
                 for lm in lm_list:
