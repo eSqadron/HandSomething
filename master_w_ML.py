@@ -62,11 +62,11 @@ if __name__ == '__main__':
                             pinky_finger = lm_list[17:20 + 1]
                             str_send = f"LED R {int(sqrt(sum([(a_i - b_i) ** 2 for a_i, b_i in zip(pinky_finger[0], pinky_finger[-1])])/170) * 100)}"
                         elif klasa == 'Led G':
-                            pass
+                            str_send = f"LED G {100}"
                         elif klasa == 'Led B':
-                            pass
+                            str_send = f"LED B {100}"
                         elif klasa == 'Door':
-                            pass
+                            str_send = "Door"
 
                         if str_send is not None:
                             str_send_bin = str.encode(str_send)
