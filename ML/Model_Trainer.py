@@ -1,6 +1,6 @@
 
 
-PARAM_NAMES = ['Rock', 'Led', 'Door', 'Cart']
+PARAM_NAMES = ['Rock', 'Led R', 'Led G', 'Led B', 'Door', 'Cart']
 
 
 if __name__ == '__main__':
