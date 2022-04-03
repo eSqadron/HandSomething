@@ -16,21 +16,21 @@ if __name__ == '__main__':
 
     detector = HandDetector(maxHands=1, detectionCon=0.5)
 
-    F = open(f'{PARAM_NAME}.txt', 'w')
+    with open(f'{PARAM_NAME}.txt', 'w') as f:
+        while True:
+            success, img = cam.read()
+            hands, img = detector.findHands(img)
 
-    while True:
-        success, img = cam.read()
-        hands, img = detector.findHands(img)
+            if hands:
+                for hand in hands:
+                    lm_list = hand['lmList']
 
-        if hands:
-            for hand in hands:
-                lm_list = hand['lmList']
+                    if FLATTEN_LIST:
+                        lm_list = [j for i in lm_list for j in i]
 
-                if FLATTEN_LIST:
-                    lm_list = [j for i in lm_list for j in i]
+                    print(lm_list)
+                    f.write(str(lm_list) + '\n')
 
-                print(lm_list)
-                F.write(str(lm_list) + '\n')
+            cv2.imshow("Image", img)
+            cv2.waitKey(50)
 
-        cv2.imshow("Image", img)
-        cv2.waitKey(500)
